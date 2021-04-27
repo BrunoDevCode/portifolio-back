@@ -3,6 +3,7 @@ version: '3.8'
 services:
   depsist:
     image: brunodevcode/mackarel:latest
+    container_name: mackarel-backend
     restart: always
     networks:
       - web
