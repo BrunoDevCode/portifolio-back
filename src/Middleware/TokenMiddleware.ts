@@ -31,7 +31,7 @@ export default async function TokenMiddleware(
       return res.status(409).json({ error: 'User not exists' });
     }
 
-    request.headers.userId = decodedToken.id;
+    req.headers.userId = decodedToken.id;
 
     next();
   } catch (error) {
