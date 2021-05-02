@@ -1,18 +1,37 @@
 import { Request, Response } from 'express';
-import Item, { IItem } from '../Model/Item';
-import { deformatValue, formatPrice } from '../lib/utils';
+import Item from '../Model/Item';
+import { deformatValue } from '../lib/utils';
 
 export default class ItemController {
   async index(req: Request, res: Response) {
-    const { name } = req.query;
+    let { filter, page, limit }: any = req.query;
+    const { userId } = req.headers;
 
-    const nameWithRegex = new RegExp(`${name}`, 'gim');
+    page = page || 1;
+    limit = limit || 30;
+    let offset = limit * (page - 1);
 
-    const items = await Item.find({
-      name: { $regex: nameWithRegex },
+    const allItems = await Item.find({
+      userId: { $eq: userId },
+      $or: [
+        { name: { $regex: String(filter), $options: 'gi' } },
+        { category: { $regex: String(filter), $options: 'gi' } },
+      ],
     });
 
-    return res.status(200).json(items);
+    const totalPages = Math.ceil(allItems.length / limit || 1);
+
+    const items = await Item.find({
+      userId: { $eq: userId },
+      $or: [
+        { name: { $regex: String(filter), $options: 'gi' } },
+        { category: { $regex: String(filter), $options: 'gi' } },
+      ],
+    })
+      .limit(limit)
+      .skip(offset);
+
+    return res.status(200).json({ items, config: { totalPages } });
   }
 
   async show(req: Request, res: Response) {
@@ -38,6 +57,9 @@ export default class ItemController {
         anotherPrice,
         category,
       } = req.body;
+
+      console.log(req.body);
+      console.log(req.headers);
 
       cost = deformatValue(cost);
       increaseOverCost = deformatValue(increaseOverCost);
@@ -108,8 +130,9 @@ export default class ItemController {
   async delete(req: Request, res: Response) {
     try {
       const { itemId } = req.params;
+      const { userId } = req.headers;
 
-      await Item.findOneAndDelete({ _id: itemId });
+      await Item.findOneAndDelete({ _id: itemId, userId: { $eq: userId } });
 
       return res.status(200).send();
     } catch (error) {
