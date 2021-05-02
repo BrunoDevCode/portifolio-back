@@ -10,14 +10,13 @@ const itemController = new ItemController();
 
 routes.post('/user/login', userController.index);
 routes.post('/user/register', userController.create);
+// routes.post('/allItems', itemController.all);
 
 routes.get('/item/:itemId', itemController.show);
 
-routes.use(TokenMiddleware, [
-  routes.get('/item', itemController.index),
-  routes.post('/item', itemController.create),
-  routes.put('/item/:itemId', itemController.update),
-  routes.delete('/item/:itemId', itemController.delete),
-]);
+routes.get('/item', TokenMiddleware, itemController.index);
+routes.post('/item', TokenMiddleware, itemController.create);
+routes.put('/item/:itemId', TokenMiddleware, itemController.update);
+routes.delete('/item/:itemId', TokenMiddleware, itemController.delete);
 
 export { routes };
