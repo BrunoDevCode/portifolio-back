@@ -10,7 +10,7 @@ class CreateUserUseCase {
   constructor(private userRepository: MongooseUserRepository) {}
 
   async execute({ name, email, password }: IRequest): Promise<string> {
-    const userExists = this.userRepository.findByEmail(email);
+    const userExists = await this.userRepository.findByEmail(email);
 
     if (userExists) {
       throw new Error('User already exists!');
