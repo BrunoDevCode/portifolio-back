@@ -1,5 +1,5 @@
-import { Schema, model, Document } from 'mongoose';
 import * as argon2 from 'argon2';
+import { Schema, model, Document } from 'mongoose';
 
 export interface IUser extends Document {
   name: string;
@@ -26,6 +26,7 @@ const UserModel: Schema<IUser> = new Schema({
   },
 });
 
+// eslint-disable-next-line func-names
 UserModel.pre('save', async function (next) {
   this.password = await argon2.hash(this.password);
   next();
