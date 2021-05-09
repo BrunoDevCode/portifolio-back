@@ -15,6 +15,12 @@ class MongooseUserRepository implements IUserRepository {
     return user;
   }
 
+  async findById(user_id: string): Promise<IUser> {
+    const user: IUser = await User.findOne({ _id: user_id });
+
+    return user;
+  }
+
   async register({ name, email, password }: ICreateUserDTO): Promise<string> {
     const { _id } = await User.create({
       name,
