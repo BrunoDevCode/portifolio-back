@@ -20,6 +20,10 @@ class LoginUserUseCase {
   async execute({ email, password }: IRequest): Promise<string> {
     const user: IUser = await this.userRepository.findByEmail(email, true);
 
+    if (!user) {
+      throw new Error('User does not exists!');
+    }
+
     if (!(await verify(user.password, password))) {
       throw new Error('Invalid password !');
     }
