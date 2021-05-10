@@ -3,7 +3,6 @@ import { IItem } from '../model/Item';
 interface ICreateItemDTO {
   name: string;
   cost: number;
-  increaseOverCost: number;
   price: number;
   anotherPrice: number;
   category: string;
@@ -13,7 +12,6 @@ interface IUpdateItemDTO {
   id: string;
   name: string;
   cost: number;
-  increaseOverCost: number;
   price: number;
   anotherPrice: number;
   category: string;
