@@ -20,7 +20,7 @@ class CreateItemController {
 
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const token = request.headers.authorization;
+      const token = <string>request.headers.authorization;
 
       const {
         name,
@@ -40,7 +40,7 @@ class CreateItemController {
           anotherPrice,
           category,
         },
-        this.getUserId(String(token))
+        this.getUserId(token)
       );
 
       return response.status(201).send();

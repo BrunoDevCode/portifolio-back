@@ -45,7 +45,7 @@ class MongooseItemRepository implements IItemRepository {
   }
 
   async create(data: ICreateItemDTO, user_id: string): Promise<void> {
-    await Item.create({ ...data, user_id });
+    await Item.create({ ...data, userId: user_id });
   }
 
   async update(data: IUpdateItemDTO, item_id: string): Promise<void> {
