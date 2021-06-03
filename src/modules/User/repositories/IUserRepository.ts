@@ -9,7 +9,7 @@ interface ICreateUserDTO {
 interface IUserRepository {
   findByEmail(email: string): Promise<IUser>;
   findById(id: string): Promise<IUser>;
-  register({ name, email, password }: ICreateUserDTO): Promise<string>;
+  create({ name, email, password }: ICreateUserDTO): Promise<string>;
   delete(user_id: string): Promise<void>;
 }
 

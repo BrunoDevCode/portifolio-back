@@ -1,12 +1,8 @@
+import { ICreateItemDTO, ISearchItemDTO, IUpdateItemDTO } from '../../dtos';
 import Item, { IItem } from '../../model/Item';
-import {
-  IItemRepository,
-  ICreateItemDTO,
-  IUpdateItemDTO,
-  ISearchItemDTO,
-} from '../IItemRepository';
+import { IItemRepository } from '../IItemRepository';
 
-class MongooseItemRepository implements IItemRepository {
+class ItemRepository implements IItemRepository {
   async findByFilter({
     filter,
     user_id,
@@ -64,4 +60,4 @@ class MongooseItemRepository implements IItemRepository {
   }
 }
 
-export { MongooseItemRepository };
+export { ItemRepository };
