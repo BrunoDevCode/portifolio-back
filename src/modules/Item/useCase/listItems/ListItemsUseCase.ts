@@ -1,22 +1,22 @@
+import { inject, injectable } from 'tsyringe';
+
+import { ISearchItemDTO } from '../../dtos';
 import { IItem } from '../../model/Item';
-import { MongooseItemRepository } from '../../repositories/implementations/MongooseItemRepository';
+import { ItemRepository } from '../../repositories/implementations/ItemRepository';
 
-interface IRequest {
-  filter: string;
-  limit: number;
-  offset: number;
-  user_id: string;
-}
-
+@injectable()
 class ListItemsUseCase {
-  constructor(private itemRepository: MongooseItemRepository) {}
+  constructor(
+    @inject('ItemRepository')
+    private itemRepository: ItemRepository
+  ) {}
 
   async execute({
     filter,
     limit,
     offset,
     user_id,
-  }: IRequest): Promise<IItem[]> {
+  }: ISearchItemDTO): Promise<IItem[]> {
     const items = await this.itemRepository.findByFilter({
       filter,
       limit,

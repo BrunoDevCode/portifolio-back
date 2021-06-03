@@ -2,13 +2,17 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import { AppError } from '../../../../errors/AppError';
-import { CreateItemUseCase } from './CreateItemUseCase';
+import { UpdateOneItemUseCase } from './UpdateOneItemUseCase';
 
-class CreateItemController {
+class UpdateOneItemController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const createItemUseCase = container.resolve(CreateItemUseCase);
+    const updateOneUseCase = container.resolve(UpdateOneItemUseCase);
 
-    const { id } = request.user;
+    const { item_id } = request.params;
+
+    if (!item_id) {
+      throw new AppError('item_id is not provided');
+    }
 
     const {
       name,
@@ -20,15 +24,7 @@ class CreateItemController {
       category,
     } = request.body;
 
-    if (!name) {
-      throw new AppError('Name is no provided');
-    }
-
-    if (!price) {
-      throw new AppError('Price is no provided');
-    }
-
-    await createItemUseCase.execute(
+    await updateOneUseCase.execute(
       {
         name,
         quantity,
@@ -38,11 +34,11 @@ class CreateItemController {
         anotherPrice,
         category,
       },
-      id
+      item_id
     );
 
-    return response.status(201).send();
+    return response.status(200).json({ message: 'Item updated sucessfully' });
   }
 }
 
-export { CreateItemController };
+export { UpdateOneItemController };

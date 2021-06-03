@@ -1,28 +1,27 @@
 import { inject, injectable } from 'tsyringe';
 
-import { AppError } from '../../../../errors/AppError';
 import { deformatValue } from '../../../../lib/utils';
-import { ICreateItemDTO } from '../../dtos';
-import { ItemRepository } from '../../repositories/implementations/ItemRepository';
+import { IUpdateItemDTO } from '../../dtos';
+import { IItemRepository } from '../../repositories/IItemRepository';
 
 @injectable()
-class CreateItemUseCase {
+class UpdateOneItemUseCase {
   constructor(
     @inject('ItemRepository')
-    private itemRepository: ItemRepository
+    private itemRepository: IItemRepository
   ) {}
 
   async execute(
     {
       name,
-      category,
       quantity,
-      price,
+      category,
       cost,
-      anotherPrice,
       increaseOverCost,
-    }: ICreateItemDTO,
-    user_id: string
+      price,
+      anotherPrice,
+    }: IUpdateItemDTO,
+    id: string
   ): Promise<void> {
     let deformatCost = deformatValue(cost);
     const deformatIncreaseOverCost = deformatValue(increaseOverCost);
@@ -30,22 +29,19 @@ class CreateItemUseCase {
     if (deformatIncreaseOverCost !== 0)
       deformatCost += (cost / 100) * deformatIncreaseOverCost;
 
-    if (!name) {
-      throw new AppError('Name is no provided');
-    }
-
-    await this.itemRepository.create(
+    await this.itemRepository.update(
       {
         name,
-        category,
         quantity,
+        category,
         cost: deformatCost,
+        increaseOverCost,
         price: deformatValue(price),
         anotherPrice: deformatValue(anotherPrice),
       },
-      user_id
+      id
     );
   }
 }
 
-export { CreateItemUseCase };
+export { UpdateOneItemUseCase };

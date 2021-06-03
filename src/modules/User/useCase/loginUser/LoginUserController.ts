@@ -1,20 +1,26 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 
+import { AppError } from '../../../../errors/AppError';
 import { LoginUserUseCase } from './LoginUserUseCase';
 
 class LoginUserController {
-  constructor(private loginUserUseCase: LoginUserUseCase) {}
-
   async handle(request: Request, response: Response): Promise<Response> {
-    try {
-      const { email, password } = request.body;
+    const loginUserUseCase = container.resolve(LoginUserUseCase);
 
-      const token = await this.loginUserUseCase.execute({ email, password });
+    const { email, password } = request.body;
 
-      return response.status(200).json({ token });
-    } catch (err) {
-      return response.status(400).json({ error: err.message });
+    if (!email) {
+      throw new AppError('Email is no provided');
     }
+
+    if (!password) {
+      throw new AppError('Password is no provided');
+    }
+
+    const acessToken = await loginUserUseCase.execute({ email, password });
+
+    return response.status(200).json({ acessToken });
   }
 }
 
