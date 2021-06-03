@@ -1,4 +1,4 @@
-function formatPrice(price: any) {
+function formatPrice(price: any): string {
   return String(
     new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -7,7 +7,9 @@ function formatPrice(price: any) {
   );
 }
 
-function deformatValue(price: any) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function deformatValue(price: any): number {
+  // eslint-disable-next-line no-param-reassign
   price = price.replace(/\D/g, '');
   return price / 100;
 }
